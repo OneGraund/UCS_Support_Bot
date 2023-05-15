@@ -7,7 +7,13 @@ from src.openai_gpt.gpt import *
 functions = {
     'Make some coffee': {
         'func': None,
-        'args': ['milk', 'sugar'],
+        'args': {
+            'names': ['milk', 'sugar'],
+            'explanation': [
+                'boolean that takes True or False value',
+                'boolean that takes True or False value'
+            ]
+        },
         'gpt': {
             'input_example': ['Bot, can you make me some rereshing coffee that contains '
                              'milk, but because I am alergic to sugar, add no sugar',
@@ -20,7 +26,10 @@ functions = {
     },
     'Get who is working at': {
         'func': None,
-        'args': ['date'],
+        'args': {
+            'names': ['date'],
+            'explanation': ['date of when we want to look up who is working']
+        },
         'gpt': {
             'input_example': ['Bot, who is working this Monday?',
                               'Bot, who should work the next Friday?'],
