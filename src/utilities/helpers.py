@@ -29,8 +29,8 @@ available_functions = {
             'explanation': ['date of when we want to look up who is working']
         },
         'gpt': {
-            'input_example': 'Bot, who is working this Monday?',
-            'output_example': 'Get who is working; this Monday'
+            'input_example': ['Bot, who is working this Monday?'],
+            'output_example': ['Get who is working at; this Monday']
         }
     }
 }

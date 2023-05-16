@@ -2,6 +2,7 @@ import unittest
 import sys
 sys.path.append('C:/Users/OneGraund/PycharmProjects/UCS_Support_Bot')
 from src.openai_gpt.gpt import *
+import src.utilities.helpers
 
 
 functions = {
@@ -66,15 +67,56 @@ class TestChooseCommand(unittest.TestCase):
         )
         self.assertEqual(response3, 'Make some coffee; True; True')
 
-
-
     def test_choose_command_who_is_working_at(self):
-        # Test case 2 for who is working
-        response2 = choose_command(
+        # Test case 1 for who is working
+        response1 = choose_command(
             available_functions=functions,
             text='How is it going, bot? I am confused... Who can be working on the next Monday?'
         )
         self.assertEqual(
-            response2,
+            response1,
             'Get who is working at; next Monday'
+        )
+
+    def test_utilities_helpers_available_functions(self):
+        # Test case 1 for swap support schedule
+        response1 = choose_command(
+            available_functions=src.utilities.helpers.available_functions,
+            text='Bot, can you switch the support schedule for Anna, who is supposed '
+                 'to work on the 21st of May, and James, who is supposed to work on the 22nd of May?'
+        )
+        self.assertEqual(
+            response1,
+            'Swap support schedule; Anna; 21 May; James; 22 May'
+        )
+
+        # Test case 2 for swap support schedule in russian
+        response2 = choose_command(
+            available_functions=src.utilities.helpers.available_functions,
+            text='Бот, можешь поменять график сапорта для Анны, которая должна '
+                 'работать 21ого Мая, и Джеймса, которй должный работать 22ого Мая?'
+        )
+        self.assertEqual(
+            response2,
+            'Swap support schedule; Anna; 21 May; James; 22 May'
+        )
+
+        # Test case 3 for get who is working at
+        response3 = choose_command(
+            available_functions=src.utilities.helpers.available_functions,
+            text='Bot, tell me who is scheduled to work on the 30th of May.'
+        )
+        self.assertEqual(
+            response3,
+            'Get who is working at; 30 May'
+        )
+
+        # Test case 4 for None
+        response4 = choose_command(
+            available_functions=src.utilities.helpers.available_functions,
+            text='Bot, can you please construct a plan for architectual building?'
+        )
+        self.assertEqual(
+            response4,
+            'None'
         )
