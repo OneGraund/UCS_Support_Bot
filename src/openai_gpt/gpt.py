@@ -8,7 +8,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 DEBUG = 1
 
 
-def askGPT(prompt, show_output=0):
+def ask_gpt(prompt, show_output=0):
     response = openai.Completion.create(
         model="text-davinci-003",
         prompt=prompt,
@@ -30,51 +30,51 @@ def choose_command(available_functions, text, show_prompt=0):
              'based on a user input. As a bot you have following functions available: '
     for index, func_name in enumerate(available_functions.keys()):
         if 'args' in available_functions[func_name]:
-            prompt+=f'\"{func_name}'
+            prompt += f'\"{func_name}'
             for arg_id, arg in enumerate(available_functions[func_name]['args']['names']):
-                if arg_id!=len(available_functions[func_name]['args']['names'])-1:
-                    prompt+=f'; {arg}'
+                if arg_id != len(available_functions[func_name]['args']['names']) - 1:
+                    prompt += f'; {arg}'
                 else:
-                    prompt+=f'; {arg}\"'
-            prompt+=', '
+                    prompt += f'; {arg}\"'
+            prompt += ', '
             # \"Make some coffee; milk; sugar\",
             for arg_id, arg in enumerate(available_functions[func_name]['args']['names']):
-                if arg_id==0:
-                    prompt+=f'where {arg} is {available_functions[func_name]["args"]["explanation"][arg_id]}'
+                if arg_id == 0:
+                    prompt += f'where {arg} is {available_functions[func_name]["args"]["explanation"][arg_id]}'
                 elif arg_id != len(available_functions[func_name]['args']['names']) - 1:
-                    prompt+=f', {arg} is {available_functions[func_name]["args"]["explanation"][arg_id]} '
+                    prompt += f', {arg} is {available_functions[func_name]["args"]["explanation"][arg_id]} '
                 else:
-                    prompt+=f'and {arg} is {available_functions[func_name]["args"]["explanation"][arg_id]}; '
+                    prompt += f'and {arg} is {available_functions[func_name]["args"]["explanation"][arg_id]}; '
             # where milk is boolean (True) and sugar is boolean (False)
         else:
-            prompt+=f'\"{func_name}\"; '
+            prompt += f'\"{func_name}\"; '
 
         # Add examples to GPT
         if 'input_example' in available_functions[func_name]['gpt']:
-            prompt+="\nHere are the examples for all user's inputs and the output I want you to output." \
-                    f"\nFor \"{func_name}\" function: "
+            prompt += "\nHere are the examples for all user's inputs and the output I want you to output." \
+                      f"\nFor \"{func_name}\" function: "
             for example_id, input_example in enumerate(available_functions[func_name]['gpt']['input_example']):
-                if example_id!=len(available_functions[func_name]['gpt']['input_example'])-1:
-                    prompt+=f"user's input example {example_id+1}: \"{input_example}\", " \
-                            f"your output example based on " \
-                            f"user's input example {example_id+1}: " \
-                            f"\"{available_functions[func_name]['gpt']['output_example'][example_id]}\";\n"
+                if example_id != len(available_functions[func_name]['gpt']['input_example']) - 1:
+                    prompt += f"user's input example {example_id + 1}: \"{input_example}\", " \
+                              f"your output example based on " \
+                              f"user's input example {example_id + 1}: " \
+                              f"\"{available_functions[func_name]['gpt']['output_example'][example_id]}\";\n"
                 else:
                     prompt += f"user's input example {example_id + 1}: \"{input_example}\", " \
                               f"your output example based on " \
                               f"user's input example {example_id + 1}: " \
                               f"\"{available_functions[func_name]['gpt']['output_example'][example_id]}\".\n"
-    prompt+=f"Use all the rules and examples listed above and determine your output for this user input: \"{text}\"." \
-            f" Output only string with useful data (no ':', '\"' signs or 'Output' words)," \
-            f"If you have a day and month in your output, style it in this way: Day Month " \
-            f"(For example: 20 May; 15 July; 13 August). If you think that user's" \
-            f"input doesn't suit any of the listed above functions, than output \"None\"\n\n"
+    prompt += f"Use all the rules and examples listed above and determine your output for this user input: \"{text}\"." \
+              f" Output only string with useful data (no ':', '\"' signs or 'Output' words)," \
+              f"If you have a day and month in your output, style it in this way: Day Month " \
+              f"(For example: 20 May; 15 July; 13 August). If you think that user's" \
+              f"input doesn't suit any of the listed above functions, than output \"None\"\n\n"
     if show_prompt:
         print(f'[OPENAI PROMPT] {prompt}')
-    return askGPT(prompt).replace('\n', '').replace('.', '').replace('"','')
+    return ask_gpt(prompt).replace('\n', '').replace('.', '').replace('"', '')
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     funcs = src.utilities.helpers.available_functions
     inputs = [
         "Bot, tell me who is scheduled to work on the 30th of May.",
@@ -91,6 +91,6 @@ if __name__=='__main__':
         'Swap support schedule; Anna; 21st of May; James; 22nd of May'
     ]
 
-    for id, i in enumerate(inputs):
-        print(f'{str("=")*60}\nInput: {i}\nCode output: {choose_command(funcs, i)}.\n'
-              f'Should be: {outputs[id]}\n{str("=")*60}')
+    for input_id, input_example in enumerate(inputs):
+        print(f'{str("=") * 60}\nInput: {input_example}\nCode output: {choose_command(funcs, input_example)}.\n'
+              f'Should be: {outputs[input_id]}\n{str("=") * 60}')

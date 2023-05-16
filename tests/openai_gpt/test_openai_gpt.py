@@ -1,9 +1,9 @@
 import unittest
 import sys
+
 sys.path.append('C:/Users/OneGraund/PycharmProjects/UCS_Support_Bot')
 from src.openai_gpt.gpt import *
 import src.utilities.helpers
-
 
 functions = {
     'Make some coffee': {
@@ -17,7 +17,7 @@ functions = {
         },
         'gpt': {
             'input_example': ['Bot, can you make me some rereshing coffee that contains '
-                             'milk, but because I am alergic to sugar, add no sugar',
+                              'milk, but because I am alergic to sugar, add no sugar',
                               'Bot, make me coffee with sugar and milk',
                               'Hey, the greatest bot. If you can, please make me a coffee without anything. Thanks'],
             'output_example': ['Make some coffee; True; False',
