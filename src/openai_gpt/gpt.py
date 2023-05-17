@@ -85,10 +85,10 @@ if __name__ == '__main__':
         'who is supposed to work on the 22nd of May?'
     ]
     outputs = [
-        'Get who is working at; 30th of May',
-        'Swap support schedule; Maria; 15th of June; Alex; 10th of June',
+        'Get who is working at; 30 May',
+        'Swap support schedule; Maria; 15 June; Alex; 10 June',
         "None",
-        'Swap support schedule; Anna; 21st of May; James; 22nd of May'
+        'Swap support schedule; Anna; 21 May; James; 22 May'
     ]
 
     for input_id, input_example in enumerate(inputs):
