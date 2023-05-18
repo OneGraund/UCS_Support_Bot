@@ -6,9 +6,9 @@ available_functions = {
         'args': {
             'names': ['employee1', 'date1', 'employee2', 'date2'],
             'explanation': [
-                'Name of first employee that wants to change',
+                'Must be a name of first employee that wants to change',
                 'Date when employee one had to support',
-                'Name of second employee that is going to change with the first one',
+                'Must be a name of second employee that is going to change with the first one',
                 'Date when employee two had to support'
             ]
         },

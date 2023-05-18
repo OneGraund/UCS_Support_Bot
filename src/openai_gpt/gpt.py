@@ -68,7 +68,8 @@ def choose_command(available_functions, text, show_prompt=0):
               f" Output only string with useful data (no ':', '\"' signs or 'Output' words)," \
               f"If you have a day and month in your output, style it in this way: Day Month " \
               f"(For example: 20 May; 15 July; 13 August). If you think that user's" \
-              f"input doesn't suit any of the listed above functions, than output \"None\"\n\n"
+              f"input doesn't suit any of the listed above functions, than output \"None\", if one of the arguments " \
+              f"is not specified, than write an argument value \"None\".\n\n"
     if show_prompt:
         print(f'[OPENAI PROMPT] {prompt}')
     return ask_gpt(prompt).replace('\n', '').replace('.', '').replace('"', '')

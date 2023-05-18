@@ -18,6 +18,8 @@ class UCSSupportBot:
                                                  f'[TELEGRAM] Bot started!')
         self.senderThread = threading.Thread(target=self.sender, args=())
         self.senderThread.start()
+        #self.handlersThread = threading.Thread(target=self.handlers, args=())
+        #self.handlersThread.start()
         self.handlers()
         if UCSSupportBot.DEBUG:
             self.bot.polling()
@@ -35,13 +37,31 @@ class UCSSupportBot:
         def message_handling(message):
             # Handlers func goes here
             if message.text.lower().find('bot')!=-1 or message.text.lower().find('бот')!=-1:
+                print(f'[TELEGRAM] A message was spotted to the bot from user_id {message.from_user()}. Sending to OpenAI...')
+                def employee_by_user_id(dictionary, value):
+                    for key, val in dictionary.items():
+                        if val == value:
+                            return key
+                    return None  # Value not found in the dictionary
+
+                employees = {
+                    'Alex': getenv('TELEGRAM_ALEX_USER_ID'),
+                    'Vova': getenv('TELEGRAM_VOVA_USER_ID'),
+                    'Egor': getenv('TELEGRAM_EGOR_USER_ID'),
+                    'Yaro': getenv('TELEGRAM_YARO_USER_ID')
+                }
+
+                user_id = message.from_user()
+                employee_name = employee_by_user_id(employees, user_id)
                 response = src.openai_gpt.gpt.choose_command(
                     available_functions=src.utilities.helpers.available_functions,
-                    text=message.text
+                    text=f'From: {employee_name} {message.text}'
                 )
+                del employee_name
+                print(f'\t[OPENAI] Response: {response}')
                 if response.find(';')!=-1:
                     response = response.split(';')
-                    to_send=f'Calling function {response[0]}. With arguments: '
+                    to_send=f'Calling function "{response[0]}". With arguments: '
                     for i in range(1, len(response)):
                         to_send+=f'{response[i]} '
                     self.send_message(
@@ -54,7 +74,12 @@ class UCSSupportBot:
                         to_print+= f'{arg}, '
                         response[index+1]=response[index+1][1:]
                     print(to_print)
-                    src.utilities.helpers.available_functions[response[0]]['func'](response[1:])
+                    src.utilities.helpers.available_functions[response[0]]['func'](*response[1:])
+                elif response=='None':
+                    self.send_message(
+                        chat_id=self.group_id,
+                        message=f'This is not one of my functions'
+                    )
                 else:
                     self.send_message(
                         chat_id=self.group_id,
@@ -77,7 +102,8 @@ class UCSSupportBot:
         while True:
             sleep(self.SENDER_DELAY)
             # Sender func goes here
-            # self.bot.send_message(self.group_id, '[SENDER] Bot is working')
+            if UCSSupportBot.DEBUG:
+                self.bot.send_message(self.group_id, '[SENDER] Bot is working')
 
 
 if __name__ == '__main__':
